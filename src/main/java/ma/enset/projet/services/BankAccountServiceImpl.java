@@ -68,10 +68,10 @@ public class BankAccountServiceImpl implements BankAccountService{
 
 
     @Override
-    public void debit(String accountId, double amount, String description) throws BankAccountNotFoundException {
+    public void debit(String accountId, double amount, String description) throws BankAccountNotFoundException, BalanceNotSufficientException {
         BankAccount bankAccount = getBankAccount(accountId);
         if(bankAccount.getBalance()<amount)
-            new BalanceNotSufficientException("Balance not sufficient");
+           throw new BalanceNotSufficientException("Balance not sufficient");
 
         AccountOperation accountOperation = new AccountOperation();
         accountOperation.setType(OperationType.DEBIT);
@@ -101,7 +101,7 @@ public class BankAccountServiceImpl implements BankAccountService{
     }
 
     @Override
-    public void transfer(String accountIdSource, String accountIdDestination, double amount) throws BankAccountNotFoundException, BankAccountNotFoundException  {
+    public void transfer(String accountIdSource, String accountIdDestination, double amount) throws  BankAccountNotFoundException, BalanceNotSufficientException {
         debit(accountIdSource,amount,"Transfer to : " + accountIdDestination);
         credit(accountIdDestination,amount,"Transfer from : " + accountIdSource);
 
@@ -116,5 +116,9 @@ public class BankAccountServiceImpl implements BankAccountService{
     public BankAccount getBankAccount(String accountId) throws BankAccountNotFoundException {
        BankAccount bankAccount = bankAccountRepository.findById(accountId).orElseThrow(()->new BankAccountNotFoundException("BankAccount not found"));
        return bankAccount;
+    }
+    @Override
+    public List<BankAccount> bankAccountList(){
+        return bankAccountRepository.findAll();
     }
 }

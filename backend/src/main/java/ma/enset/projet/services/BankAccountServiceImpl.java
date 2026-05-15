@@ -15,6 +15,7 @@ import ma.enset.projet.repositories.BankAccountRepository;
 import ma.enset.projet.repositories.CustomerRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -170,7 +171,10 @@ public class BankAccountServiceImpl implements BankAccountService{
     public AccountHistoryDTO getAccountHistory(String accountId, int page, int size) throws BankAccountNotFoundException {
         BankAccount bankAccount = bankAccountRepository.findById(accountId).orElse(null);
         if(bankAccount==null) throw new BankAccountNotFoundException("Account not found");
-        Page<AccountOperation> accountOperations = accountOperationRepository.findByBankAccountId(accountId, PageRequest.of(page,size));
+        Page<AccountOperation> accountOperations = accountOperationRepository.findByBankAccountId(
+                accountId,
+                PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "operationDate"))
+        );
         AccountHistoryDTO accountHistoryDTO = new AccountHistoryDTO();
         List<AccountOperationDTO> accountOperationDTOS = accountOperations.getContent().stream().map(operation -> dtoMapper.fromAccountOperation(operation)).collect(Collectors.toList());
         accountHistoryDTO.setAccountId(bankAccount.getId());

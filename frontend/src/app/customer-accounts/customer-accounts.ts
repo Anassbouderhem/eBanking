@@ -27,4 +27,9 @@ export class CustomerAccounts implements OnInit {
     this.customer = history.state['customer'];
     this.accounts$ = this.accountService.getCustomerAccounts(this.customerId);
   }
+  handleAccountDetails(accountId: string) {
+    this.router.navigate(['accounts'], {
+      queryParams: { accountId: accountId }
+    });
+  }
 }

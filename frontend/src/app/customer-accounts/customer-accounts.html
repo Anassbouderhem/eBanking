@@ -24,7 +24,7 @@
           <td>{{ acc.balance | number:'1.2-2' }}</td>
           <td>{{ acc.status }}</td>
           <td>
-            <button class="btn btn-info btn-sm">
+            <button (click)="handleAccountDetails(acc.id)" class="btn btn-info btn-sm">
               <i class="bi bi-eye"></i>
             </button>
           </td>

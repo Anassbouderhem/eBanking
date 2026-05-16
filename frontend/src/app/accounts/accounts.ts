@@ -5,6 +5,7 @@ import { AccountDetails } from '../model/account.model';
 import { AccountService } from '../services/accountService'
 import { ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-accounts',
@@ -20,7 +21,7 @@ export class Accounts {
   pageSize: number = 5;
   errorMessage!: string;
 
-  constructor(private fb: FormBuilder, private accountService: AccountService) {}
+  constructor(private fb: FormBuilder, private accountService: AccountService, private route: ActivatedRoute) {}
 
   ngOnInit(): void {
     this.accountFormGroup = this.fb.group({ accountId: this.fb.control('') });
@@ -29,6 +30,12 @@ export class Accounts {
       amount: this.fb.control(0),
       description: this.fb.control(''),
       accountDestination: this.fb.control(''),
+    });
+    this.route.queryParams.subscribe(params => {
+      if (params['accountId']) {
+        this.accountFormGroup.setValue({ accountId: params['accountId'] });
+        this.handleSearchAccount();
+      }
     });
   }
 

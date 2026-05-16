@@ -1,9 +1,9 @@
 package ma.enset.projet.web;
 
-import ma.enset.projet.dtos.AccountHistoryDTO;
-import ma.enset.projet.dtos.AccountOperationDTO;
-import ma.enset.projet.dtos.BankAccountDTO;
+import ma.enset.projet.dtos.*;
+import ma.enset.projet.exeptions.BalanceNotSufficientException;
 import ma.enset.projet.exeptions.BankAccountNotFoundException;
+import ma.enset.projet.exeptions.CustomerNotFoundException;
 import ma.enset.projet.services.BankAccountService;
 import org.springframework.web.bind.annotation.*;
 
@@ -39,5 +39,38 @@ public class BankAccountRestController {
     @GetMapping("/customers/{customerId}/accounts")
     public List<BankAccountDTO> getCustomerAccounts(@PathVariable Long customerId) {
         return bankAccountService.getCustomerAccounts(customerId);
+    }
+    @PostMapping("/accounts/debit")
+    public DebitDTO debit(@RequestBody DebitDTO debitDTO) throws BankAccountNotFoundException, BalanceNotSufficientException {
+        bankAccountService.debit(debitDTO.getAccountId(), debitDTO.getAmount(), debitDTO.getDescription());
+        return debitDTO;
+    }
+    @PostMapping("/accounts/credit")
+    public CreditDTO credit(@RequestBody CreditDTO creditDTO) throws BankAccountNotFoundException {
+        bankAccountService.credit(creditDTO.getAccountId(), creditDTO.getAmount(), creditDTO.getDescription());
+        return creditDTO;
+    }
+
+    @PostMapping("/accounts/transfer")
+    public void transfer(@RequestBody TransferRequestDTO transferRequestDTO) throws BankAccountNotFoundException, BalanceNotSufficientException {
+        bankAccountService.transfer(
+                transferRequestDTO.getAccountSource(),
+                transferRequestDTO.getAccountDestination(),
+                transferRequestDTO.getAmount()
+        );
+    }
+    @PostMapping("/accounts/current")
+    public CurrentBankAccountDTO saveCurrentBankAccount(
+            @RequestParam double initialBalance,
+            @RequestParam double overDraft,
+            @RequestParam Long customerId) throws CustomerNotFoundException {
+        return bankAccountService.saveCurrentBankAccount(initialBalance, overDraft, customerId);
+    }
+    @PostMapping("/accounts/saving")
+    public SavingBankAccountDTO saveSavingBankAccount(
+            @RequestParam double initialBalance,
+            @RequestParam double interestRate,
+            @RequestParam Long customerId) throws CustomerNotFoundException {
+        return bankAccountService.saveSavingBankAccount(initialBalance, interestRate, customerId);
     }
 }

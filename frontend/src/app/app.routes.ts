@@ -9,7 +9,7 @@ import { AdminTemplate } from './admin-template/admin-template'
 export const routes: Routes = [
   { path: "login", component: Login},
   { path: "", redirectTo : "/login", pathMatch : "full"},
-  { path: "admin", component: AdminTemplate, children : [
+  { path: "admin", component: AdminTemplate, canActivate : [AuthenticationGuard], children : [
       { path: 'customers', component: Customers },
       { path: 'accounts', component: Accounts },
       { path: 'new-customer', component: NewCustomer },

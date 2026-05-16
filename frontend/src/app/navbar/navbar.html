@@ -25,10 +25,14 @@
           <a class="nav-link disabled" aria-disabled="true">Disabled</a>
         </li>
       </ul>
-      <form class="d-flex" role="search">
-        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search"/>
-        <button class="btn btn-outline-success" type="submit">Search</button>
-      </form>
+      @if (authService.isAuthenticated){
+      <ul class="navbar">
+        <li class="nav-item">
+          <span class="text-white me-2">{{ authService.username }}</span>
+           </li>
+        <button (click)="handleLogout()" class="btn btn-success">Logout</button>
+      </ul>
+      }
     </div>
   </div>
 </nav>

@@ -60,7 +60,7 @@
             {{ errorMessage }}
           </div>
         </div>
-        <div class="col-md-6">
+        <div class="col-md-6" *ngIf="authService.roles.includes('ADMIN')">
           <div *ngIf="account$ | async" class="card">
             <div class="card-header">Nouvelle Opération</div>
             <div class="card-body">

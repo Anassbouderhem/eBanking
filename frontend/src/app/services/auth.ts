@@ -2,6 +2,9 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { jwtDecode } from 'jwt-decode';
+import { Router } from '@angular/router';
+
+
 @Injectable({
   providedIn: 'root',
 })
@@ -9,9 +12,9 @@ export class Auth {
 
   isAuthenticated : boolean = false;
   roles : any;
-  username : any;
+  username : any
   accessToken! : any;
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient, private router : Router) {
     if (typeof window !== 'undefined') {
       let token = localStorage.getItem("access-token");
       if (token) {
@@ -42,5 +45,14 @@ export class Auth {
     this.username=undefined;
     this.roles=undefined;
     localStorage.removeItem("access-token");
+  }
+  loadJwtTokenFromLocalStorage() {
+    if (typeof window !== 'undefined') {
+      let token = window.localStorage.getItem("access-token");
+      if (token) {
+        this.loadProfile({ "access-token": token });
+        this.router.navigateByUrl("/admin/customers")
+      }
+    }
   }
 }

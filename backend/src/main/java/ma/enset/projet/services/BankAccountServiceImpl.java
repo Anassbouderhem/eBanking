@@ -192,6 +192,18 @@ public class BankAccountServiceImpl implements BankAccountService{
         List<CustomerDTO> customerDTOS = customers.stream().map(customer -> dtoMapper.fromCustomer(customer)).collect(Collectors.toList());
         return customerDTOS;
     }
-
+    @Override
+    public List<BankAccountDTO> getCustomerAccounts(Long customerId) {
+        List<BankAccount> bankAccounts = bankAccountRepository.findByCustomerId(customerId);
+        return bankAccounts.stream().map(account -> {
+            if (account instanceof SavingAccount) {
+                SavingAccount savingAccount = (SavingAccount) account;
+                return dtoMapper.fromSavingBankAccount(savingAccount);
+            } else {
+                CurrentAccount currentAccount = (CurrentAccount) account;
+                return dtoMapper.fromCurrentBankAccount(currentAccount);
+            }
+        }).collect(Collectors.toList());
+    }
 
 }

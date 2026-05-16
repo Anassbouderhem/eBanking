@@ -34,4 +34,8 @@ export class AccountService {
       accountSource, accountDestination, amount, description
     });
   }
+
+  public getCustomerAccounts(customerId: string): Observable<Array<any>> {
+    return this.http.get<Array<any>>(`${this.backendHost}/customers/${customerId}/accounts`);
+  }
 }

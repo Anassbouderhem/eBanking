@@ -36,4 +36,8 @@ public class BankAccountRestController {
                                                      @RequestParam(name="size", defaultValue = "5")int size) throws BankAccountNotFoundException {
         return bankAccountService.getAccountHistory(accountId,page,size);
     }
+    @GetMapping("/customers/{customerId}/accounts")
+    public List<BankAccountDTO> getCustomerAccounts(@PathVariable Long customerId) {
+        return bankAccountService.getCustomerAccounts(customerId);
+    }
 }

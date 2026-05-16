@@ -1,5 +1,15 @@
-import { CanActivateFn } from '@angular/router';
+import { CanActivateFn, Router } from '@angular/router';
+import { inject } from '@angular/core';
+import { Auth } from '../services/auth';
 
 export const authorizationGuard: CanActivateFn = (route, state) => {
-  return true;
+  const authService = inject(Auth);
+  const router = inject(Router);
+
+  if (authService.roles.includes("ADMIN")) {
+    return true;
+  } else {
+    router.navigateByUrl("/admin/notAuthorized");
+    return false;
+  }
 };

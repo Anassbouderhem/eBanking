@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
-
+import { Auth } from '../services/auth';
 @Component({
   selector: 'app-login',
   imports: [ReactiveFormsModule],
@@ -9,7 +9,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 })
 export class Login implements OnInit{
   formLogin! :FormGroup;
-  constructor(private fb : FormBuilder) {
+  constructor(private fb : FormBuilder, private authService : Auth) {
   }
   ngOnInit() {
     this.formLogin=this.fb.group({
@@ -18,6 +18,15 @@ export class Login implements OnInit{
     })
   }
   handleLogin(){
-    console.log(this.formLogin.value);
+    let username = this.formLogin.value.username;
+    let pwd = this.formLogin.value.password;
+    this.authService.login(username,pwd).subscribe({
+     next : data => {
+       console.log(data)
+     },
+      error : err => {
+       console.log(err);
+      }
+    })
   }
 }

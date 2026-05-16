@@ -6,7 +6,40 @@
     <div class="card-body">
       <p><strong>ID :</strong> {{ customerId }}</p>
       <p><strong>Email :</strong> {{ customer.email }}</p>
-
+      <div class="card mb-3">
+        <div class="card-header">Nouveau Compte</div>
+        <div class="card-body">
+          <form [formGroup]="newAccountFormGroup" (ngSubmit)="handleSaveAccount()">
+            <div class="mb-3">
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio"
+                       formControlName="accountType" value="CURRENT">
+                <label class="form-check-label">Compte Courant</label>
+              </div>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio"
+                       formControlName="accountType" value="SAVING">
+                <label class="form-check-label">Compte Épargne</label>
+              </div>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Solde Initial</label>
+              <input type="number" formControlName="initialBalance" class="form-control">
+            </div>
+            <div class="mb-3" *ngIf="newAccountFormGroup.value.accountType === 'CURRENT'">
+              <label class="form-label">Découvert Autorisé</label>
+              <input type="number" formControlName="overDraft" class="form-control">
+            </div>
+            <div class="mb-3" *ngIf="newAccountFormGroup.value.accountType === 'SAVING'">
+              <label class="form-label">Taux d'Intérêt</label>
+              <input type="number" formControlName="interestRate" class="form-control">
+            </div>
+            <button type="submit" class="btn btn-success w-100">
+              Créer le Compte
+            </button>
+          </form>
+        </div>
+      </div>
       <table class="table table-bordered">
         <thead class="table-dark">
         <tr>
@@ -31,7 +64,6 @@
         </tr>
         </tbody>
       </table>
-
     </div>
   </div>
 </div>

@@ -38,4 +38,16 @@ export class AccountService {
   public getCustomerAccounts(customerId: string): Observable<Array<any>> {
     return this.http.get<Array<any>>(`${this.backendHost}/customers/${customerId}/accounts`);
   }
+
+  public saveCurrentAccount(initialBalance: number, overDraft: number, customerId: string): Observable<any> {
+    return this.http.post(`${this.backendHost}/accounts/current`, null, {
+      params: { initialBalance, overDraft, customerId }
+    });
+  }
+
+  public saveSavingAccount(initialBalance: number, interestRate: number, customerId: string): Observable<any> {
+    return this.http.post(`${this.backendHost}/accounts/saving`, null, {
+      params: { initialBalance, interestRate, customerId }
+    });
+  }
 }
